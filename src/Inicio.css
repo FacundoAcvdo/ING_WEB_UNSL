@@ -1,0 +1,7 @@
+.contenedorPeliculas{
+    width: 57.8%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+}
