@@ -1,7 +1,7 @@
 import React from 'react'
 import { Menu, Portal, Text } from "@chakra-ui/react"
 
-import { Input, InputGroup, Kbd } from "@chakra-ui/react"
+import { Input, InputGroup } from "@chakra-ui/react"
 import { LuSearch } from "react-icons/lu"
 
 import "./Nav.css"
@@ -18,11 +18,10 @@ function Nav() {
             <Portal>
                 <Menu.Positioner>
                 <Menu.Content>
-                    <Menu.Item value="new-txt">New Text File</Menu.Item>
-                    <Menu.Item value="new-file">New File...</Menu.Item>
-                    <Menu.Item value="new-win">New Window</Menu.Item>
-                    <Menu.Item value="open-file">Open File...</Menu.Item>
-                    <Menu.Item value="export">Export</Menu.Item>
+                    <Menu.Item value="new-txt">Populares</Menu.Item>
+                    <Menu.Item value="new-file">En cartelera</Menu.Item>
+                    <Menu.Item value="new-win">Proximamente</Menu.Item>
+                    <Menu.Item value="open-file">Mejor Valoradas</Menu.Item>
                 </Menu.Content>
                 </Menu.Positioner>
             </Portal>
@@ -34,11 +33,10 @@ function Nav() {
             <Portal>
                 <Menu.Positioner>
                 <Menu.Content>
-                    <Menu.Item value="new-txt">New Text File</Menu.Item>
-                    <Menu.Item value="new-file">New File...</Menu.Item>
-                    <Menu.Item value="new-win">New Window</Menu.Item>
-                    <Menu.Item value="open-file">Open File...</Menu.Item>
-                    <Menu.Item value="export">Export</Menu.Item>
+                    <Menu.Item value="new-txt">Populares</Menu.Item>
+                    <Menu.Item value="new-file">Se emiten hoy</Menu.Item>
+                    <Menu.Item value="new-win">En televisión</Menu.Item>
+                    <Menu.Item value="open-file">Mejor valoradas</Menu.Item>
                 </Menu.Content>
                 </Menu.Positioner>
             </Portal>
@@ -50,11 +48,7 @@ function Nav() {
             <Portal>
                 <Menu.Positioner>
                 <Menu.Content>
-                    <Menu.Item value="new-txt">New Text File</Menu.Item>
-                    <Menu.Item value="new-file">New File...</Menu.Item>
-                    <Menu.Item value="new-win">New Window</Menu.Item>
-                    <Menu.Item value="open-file">Open File...</Menu.Item>
-                    <Menu.Item value="export">Export</Menu.Item>
+                    <Menu.Item value="new-txt">Gente popular</Menu.Item>
                 </Menu.Content>
                 </Menu.Positioner>
             </Portal>

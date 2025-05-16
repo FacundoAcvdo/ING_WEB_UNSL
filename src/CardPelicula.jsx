@@ -6,23 +6,21 @@ function CardPelicula(props) {
 
   return (
     <>
-        <Card.Root width="180px" margin="20px">
-        <Image src={props.src} alt={props.title}></Image>
-        <Card.Body gap={2}>
-            <Card.Title>{props.title}</Card.Title>
-        </Card.Body>
-        <Card.Footer justifyContent="flex-end">
-            <ProgressCircle.Root size="md" value={props.rate*10} colorPalette="orange">
-                <ProgressCircle.Circle>
-                <ProgressCircle.Track />
-                <ProgressCircle.Range />
-                </ProgressCircle.Circle>
-                <AbsoluteCenter>
-                <ProgressCircle.ValueText />
-                </AbsoluteCenter>
-            </ProgressCircle.Root>
-      </Card.Footer>
-        </Card.Root>
+    <Card.Root width="180px" margin="20px" height="350px">
+        <Image src={props.src} alt={props.title} height="265px"></Image>
+      <Card.Body style={{ padding: "10px" }}>
+        <Card.Title style={{ marginTop: "10px", textAlign: "left" }}>{props.title}</Card.Title>
+        <ProgressCircle.Root size="md" value={props.rate * 10} colorPalette="green" position="absolute" top="245px" right="15px" backgroundColor="#082444" borderRadius="50%">
+          <ProgressCircle.Circle css={{ "--thickness": "3px" }}>
+          <ProgressCircle.Track />
+          <ProgressCircle.Range />
+          </ProgressCircle.Circle>
+        <AbsoluteCenter>
+          <ProgressCircle.ValueText color="white"/>
+        </AbsoluteCenter>
+      </ProgressCircle.Root>
+      </Card.Body>
+    </Card.Root>
     </>
   )
 }
