@@ -54,8 +54,8 @@ function Nav() {
             </Portal>
         </Menu.Root>
     </header>
-    <InputGroup flex="1" startElement={<LuSearch />} width="920px" marginLeft="500px" marginTop="5px">
-        <Input placeholder="Buscar pelicula, serie, gente" h="50px" border="none"/>
+    <InputGroup flex="1" startElement={<LuSearch />} width="100%" marginTop="5px" paddingLeft="22%" className='buscador'>
+        <Input placeholder="Buscar pelicula, serie, gente" h="50px" border="none" outline="none"/>
     </InputGroup>
     </>
   )
