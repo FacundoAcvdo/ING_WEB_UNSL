@@ -23,8 +23,8 @@ function Inicio() {
 
   return (
     <>
-      <Center w="100%" h="100%" marginTop="20px" display="flex" flexDirection="column" justifyContent="flex-start">
-        <Text textStyle="3xl" fontWeight="semibold" textAlign="left" width="60%" marginBottom="10px">Lo más popular</Text>
+      <Center w="100%" h="100%" marginTop="40px" display="flex" flexDirection="column" justifyContent="flex-start">
+        <Text textStyle="3xl" fontWeight="semibold" textAlign="left" width="56.875%" marginBottom="10px">Lo más popular</Text>
         <div className='contenedorPeliculas'>
             {populares.map((value, index) => {
                 return <CardPelicula key={index} title={value.title} src={"https://image.tmdb.org/t/p/w500"+value.poster_path} rate={value.vote_average}/>
