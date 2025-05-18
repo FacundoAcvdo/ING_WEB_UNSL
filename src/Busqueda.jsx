@@ -16,6 +16,10 @@ function Busqueda() {
   const [series, setSeries] = useState([])
   const [gente, setGente] = useState([])
 
+  const [verPeliculas, setVerPeliculas] = useState(true)
+  const [verSeries, setVerSeries] = useState(false)
+  const [verGente, setVerGente] = useState(false)
+
   const options = {
   method: 'GET',
   headers: {
@@ -25,6 +29,10 @@ function Busqueda() {
   };
     
   useEffect(()=>{
+    setPeliculas([])
+    setSeries([])
+    setGente([])
+
     fetch('https://api.themoviedb.org/3/search/multi?query='+data+'&include_adult=true&language=es-ES&page=1', options)
     .then(res => res.json())
     .then(res => {
@@ -37,6 +45,27 @@ function Busqueda() {
     .catch(err => console.error(err));
   }, [data])
 
+
+  const handleClick= (number) => {
+    if (number == 0){
+        setVerPeliculas(true)
+        setVerSeries(false)
+        setVerGente(false)
+    }
+
+    if (number == 1){
+        setVerPeliculas(false)
+        setVerSeries(true)
+        setVerGente(false)
+    }
+
+    if (number == 2){
+        setVerPeliculas(false)
+        setVerSeries(false)
+        setVerGente(true)
+    }
+  }
+
   return (
     <>
         <Nav/>
@@ -45,13 +74,21 @@ function Busqueda() {
         <Text textStyle="3xl" fontWeight="semibold" textAlign="left" width="56.875%" marginBottom="10px">Resultados</Text>
             <div className='contenedorBusqueda'>
                 <div className='menu'>
-                    <Button variant="ghost" colorPalette="blue">Peliculas</Button>
-                    <Button variant="ghost" colorPalette="blue">Series</Button>
-                    <Button variant="ghost" colorPalette="blue">Personas</Button>
+                    <Button variant="ghost" colorPalette="blue" onClick={()=> handleClick(0)}>Peliculas ({peliculas.length})</Button>
+                    <Button variant="ghost" colorPalette="blue" onClick={()=> handleClick(1)}>Series ({series.length})</Button>
+                    <Button variant="ghost" colorPalette="blue" onClick={()=> handleClick(2)}>Personas ({gente.length})</Button>
                 </div>
                 <div className='resultados'>
-                    {peliculas.map((value, index) => {
-                        return <CardBusqueda key={index} title={value.title} src={"https://image.tmdb.org/t/p/w500"+value.poster_path} overview={value.overview}/>
+                    {verPeliculas && peliculas.map((value, index) => {
+                        return <CardBusqueda key={index} title={value.title} src={value.poster_path} overview={value.overview}/>
+                    })}
+
+                    {verSeries && series.map((value, index) => {
+                        return <CardBusqueda key={index} title={value.name} src={value.poster_path} overview={value.overview}/>
+                    })}
+
+                    {verGente && gente.map((value, index) => {
+                        return <CardBusqueda key={index} title={value.name} src={value.profile_path} overview={value.overview}/>
                     })}
                 </div>
             </div>
