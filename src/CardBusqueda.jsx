@@ -11,8 +11,8 @@ function CardBusqueda(props) {
   }
 
   return (
-    <Card.Root flexDirection="row" overflow="hidden" maxW="x3" marginBottom="3%">
-        <Image src={handleImage()}alt={props.title} width="20%"></Image>
+    <Card.Root flexDirection="row" overflow="hidden" maxW="x3" marginBottom="3%" maxH="18vh">
+        <Image src={handleImage()} alt={props.title} width="10%"></Image>
         <Card.Body>
             <Card.Title>{props.title}</Card.Title>
             <Card.Description>{props.overview}</Card.Description>
