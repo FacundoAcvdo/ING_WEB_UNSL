@@ -30,7 +30,7 @@ function Inicio() {
         <Text textStyle="3xl" fontWeight="semibold" textAlign="left" width="56.875%" marginBottom="10px">Lo más popular</Text>
         <div className='contenedor'>
             {populares.map((value, index) => {
-                return <CardPelicula key={index} title={value.title} src={"https://image.tmdb.org/t/p/w500"+value.poster_path} rate={value.vote_average}/>
+                return <CardPelicula key={index} id={value.id} title={value.title} src={"https://image.tmdb.org/t/p/w500"+value.poster_path} rate={value.vote_average}/>
             })}
         </div>
       </Center>

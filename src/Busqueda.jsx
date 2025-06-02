@@ -10,8 +10,6 @@ const key = import.meta.env.VITE_AUTH_KEY;
 
 function Busqueda() {
   let {data} = useParams()
-  const [resultados, setResultados] = useState([])
-
   const [peliculas, setPeliculas] = useState([])
   const [series, setSeries] = useState([])
   const [gente, setGente] = useState([])
@@ -80,15 +78,15 @@ function Busqueda() {
                 </div>
                 <div className='resultados'>
                     {verPeliculas && peliculas.map((value, index) => {
-                        return <CardBusqueda key={index} title={value.title} src={value.poster_path} overview={value.overview}/>
+                        return <CardBusqueda key={index} id={value.id} type={value.media_type} title={value.title} src={value.poster_path} overview={value.overview}/>
                     })}
 
                     {verSeries && series.map((value, index) => {
-                        return <CardBusqueda key={index} title={value.name} src={value.poster_path} overview={value.overview}/>
+                        return <CardBusqueda key={index} id={value.id} type={value.media_type} title={value.name} src={value.poster_path} overview={value.overview}/>
                     })}
 
                     {verGente && gente.map((value, index) => {
-                        return <CardBusqueda key={index} title={value.name} src={value.profile_path} overview={value.overview}/>
+                        return <CardBusqueda key={index} id={value.id} type={value.media_type} title={value.name} src={value.profile_path} overview={value.overview}/>
                     })}
                 </div>
             </div>
