@@ -5,3 +5,7 @@
     flex-wrap: wrap;
     justify-content: start;
 }
+
+.tituloTarjeta:hover{
+    text-decoration: underline;
+}
