@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { Image, Center, Flex, Text, AbsoluteCenter, ProgressCircle, Button, Card  } from "@chakra-ui/react"
+import { FaBookmark, FaList, FaHeart  } from "react-icons/fa";
+
 import Nav from "./Nav.jsx"
 import "./style/Info.css"
 
@@ -148,9 +150,9 @@ function Detalle() {
                   </ProgressCircle.Root>
                   </Center>
                   <Flex flexDirection="row" gap="1vw">
-                    <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444">Ic1</Button>
-                    <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444">Ic1</Button>
-                    <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444">Ic1</Button>
+                    <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444"><FaList /></Button>
+                    <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444"><FaHeart /></Button>
+                    <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444"><FaBookmark /></Button>
                   </Flex>
                   <Text textStyle="md" color="gray.200" fontStyle="italic" fontWeight="normal" marginTop="1vh">{result.tagline || ""}</Text>
                   <Text textStyle="2xl" color="white" fontWeight="bold">Vista general</Text>
