@@ -6,7 +6,7 @@ import { FaBookmark, FaList, FaHeart  } from "react-icons/fa";
 import Nav from "./Nav.jsx"
 import "./style/Info.css"
 
-const key = import.meta.env.VITE_AUTH_KEY;
+const key = import.meta.env.VITE_AUTH_KEY
 
 function Detalle() {
   let {type ,data} = useParams()
@@ -16,6 +16,7 @@ function Detalle() {
   const [director, setDirector] = useState([])
   const [actores, setActores] = useState([])
   const [canal, setCanal] = useState("")
+  
 
   const options = {
         method: 'GET',
@@ -33,7 +34,6 @@ function Detalle() {
           .then(res => res.json())
           .then(res => {
               setResult(res)
-              console.log(res)
               setRate(res.vote_average)
               if(type == "tv"){
                 setInfo(res.genres.map((value)=>{ return " "+value.name }))
