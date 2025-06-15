@@ -93,8 +93,8 @@ function Nav() {
             <Portal>
                 <Menu.Positioner>
                 <Menu.Content>
-                    <Menu.Item >Favoritos</Menu.Item>
-                    <Menu.Item onClick={() => {localStorage.setItem("token", ""); setLogged(false)}}>Cerrar Sesión</Menu.Item>
+                    <Menu.Item><Link to="/favoritos">Favoritos</Link></Menu.Item>
+                    <Menu.Item onClick={() => {localStorage.setItem("token", ""); setLogged(false); localStorage.setItem("user", "")}}>Cerrar Sesión</Menu.Item>
                 </Menu.Content>
                 </Menu.Positioner>
             </Portal>

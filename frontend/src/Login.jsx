@@ -33,6 +33,7 @@ function Login() {
       .then((res) => res.json())
       .then((res) => {
         localStorage.setItem("token", res.token)
+        localStorage.setItem("user", form.username)
         navigate("/")
       })
   };
