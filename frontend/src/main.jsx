@@ -11,6 +11,7 @@ import App from './App.jsx'
 import Busqueda from "./Busqueda.jsx";
 import Detalle from "./Detalle.jsx";
 import Login from "./Login.jsx";
+import Favoritos from "./Favoritos.jsx";
 
 const config = defineConfig({
   theme: {
@@ -30,6 +31,7 @@ createRoot(document.getElementById('root')).render(
         <Route path="/search/:data" element={<Busqueda />} />
         <Route path="/info/:type/:data" element={<Detalle />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/favoritos" element={<Favoritos />} />
       </Routes>
     </ChakraProvider>
   </BrowserRouter>

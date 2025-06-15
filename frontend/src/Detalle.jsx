@@ -7,6 +7,8 @@ import Nav from "./Nav.jsx"
 import "./style/Info.css"
 
 const key = import.meta.env.VITE_AUTH_KEY
+const url_validate = import.meta.env.VITE_VALIDATE_URL;
+const url_add = import.meta.env.VITE_ADD_URL;
 
 function Detalle() {
   let {type ,data} = useParams()
@@ -16,6 +18,7 @@ function Detalle() {
   const [director, setDirector] = useState([])
   const [actores, setActores] = useState([])
   const [canal, setCanal] = useState("")
+  const [colorFav, setColorFav] = useState("white")
   
 
   const options = {
@@ -56,6 +59,42 @@ function Detalle() {
         })
         .catch(err => console.error(err));
   }, [data])
+
+  const handleFav = () => {
+    let bodyRequest = {
+      username: localStorage.getItem("user"),
+      movieId: parseInt(data)
+    }
+
+    fetch(url_validate, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    }).then((res) => {
+      if(!res.ok){
+          alert("Error al añadir a favoritos")
+          return
+      }
+
+      if(type != "movie"){
+        alert("Solo se añaden peliculas")
+        return
+      }
+      
+      if (res.ok) {
+          fetch(url_add, {
+            method:"POST",
+            body: JSON.stringify(bodyRequest)
+          })
+          .then((res) => {
+            if(!res.ok){
+              alert("Error desconocido")
+            }
+          })
+      }
+    })
+  }
 
   const handleImage = (path) => {
     if(path == null){
@@ -151,7 +190,7 @@ function Detalle() {
                   </Center>
                   <Flex flexDirection="row" gap="1vw">
                     <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444"><FaList /></Button>
-                    <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444"><FaHeart /></Button>
+                    <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444" onClick={()=>handleFav()} color={colorFav}><FaHeart /></Button>
                     <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444"><FaBookmark /></Button>
                   </Flex>
                   <Text textStyle="md" color="gray.200" fontStyle="italic" fontWeight="normal" marginTop="1vh">{result.tagline || ""}</Text>

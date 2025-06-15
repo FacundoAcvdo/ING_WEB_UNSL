@@ -11,6 +11,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/jackc/pgx/v5"
+	"github.com/joho/godotenv"
 )
 
 var jwtKey []byte
@@ -18,6 +19,15 @@ var jwtKey []byte
 type Credentials struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
+}
+
+type Add struct {
+	Username string `json:"username"`
+	Id       int    `json:"movieId"`
+}
+
+type User struct {
+	Username string `json:"username"`
 }
 
 func enableCORS(w http.ResponseWriter) {
@@ -114,10 +124,82 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]string{"token": tokenString})
 }
 
+func handleAdd(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
+
+	var creds Add
+	err := json.NewDecoder(r.Body).Decode(&creds)
+	if err != nil {
+		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		return
+	}
+
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
+	if err != nil {
+		log.Fatalf("No se pudo conectar a la base de datos: %v\n", err)
+	}
+	defer conn.Close(context.Background())
+
+	_, e := conn.Exec(
+		context.Background(),
+		"INSERT INTO FAVORITOS (nombreusuario, idpelicula) VALUES ($1, $2)",
+		creds.Username,
+		creds.Id,
+	)
+
+	if e != nil {
+		log.Fatalf("No se pudo insertar en la base de datos: %\n", e)
+	}
+
+}
+
+func handleFavoritos(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
+
+	var lista = make(map[int]any)
+
+	var user User
+	err := json.NewDecoder(r.Body).Decode(&user)
+	if err != nil {
+		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		return
+	}
+
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
+	if err != nil {
+		log.Fatalf("No se pudo conectar a la base de datos: %v\n", err)
+	}
+	defer conn.Close(context.Background())
+
+	res, e := conn.Query(context.Background(), "SELECT idpelicula FROM FAVORITOS where nombreusuario='"+user.Username+"'")
+
+	if e != nil {
+		log.Fatalf("Error en la consulta: %v\n", e)
+	}
+
+	i := 0
+	for res.Next() {
+		id, _ := res.Values()
+		lista[i] = id[0]
+		i = i + 1
+	}
+
+	fmt.Println(lista)
+
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(lista)
+}
+
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		return
+	}
 	jwtKey = []byte(os.Getenv("JWT_KEY"))
 
 	http.HandleFunc("/login", handleLogin)
+	http.HandleFunc("/add", handleAdd)
+	http.HandleFunc("/favoritos", handleFavoritos)
 	http.Handle("/validate", JWTValidate(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	})))
