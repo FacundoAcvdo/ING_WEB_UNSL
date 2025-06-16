@@ -20,7 +20,7 @@ type Credentials struct {
 	Password string `json:"password"`
 }
 
-type Add struct {
+type UserMovie struct {
 	Username string `json:"username"`
 	Id       int    `json:"movieId"`
 }
@@ -126,7 +126,7 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 func handleAdd(w http.ResponseWriter, r *http.Request) {
 	enableCORS(w)
 
-	var creds Add
+	var creds UserMovie
 	err := json.NewDecoder(r.Body).Decode(&creds)
 	if err != nil {
 		http.Error(w, "Datos inválidos", http.StatusBadRequest)
@@ -195,8 +195,9 @@ func main() {
 	http.HandleFunc("/login", handleLogin)
 	http.HandleFunc("/add", handleAdd)
 	http.HandleFunc("/favoritos", handleFavoritos)
+	http.HandleFunc("/remove", handleRemove)
+	http.HandleFunc("/checkfav", handleCheckFav)
 	http.Handle("/validate", JWTValidate(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
 	})))
 	http.ListenAndServe(":8080", nil)
 }
