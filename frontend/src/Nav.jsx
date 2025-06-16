@@ -84,7 +84,8 @@ function Nav() {
                 </Menu.Positioner>
             </Portal>
         </Menu.Root>
-        {!logged && <Button marginLeft="35vw" width="64px" height="64px" backgroundColor="transparent"><Link to="/login">Iniciar sesión</Link></Button>}
+        {!logged && <Button marginLeft="25vw" width="64px" height="64px" backgroundColor="transparent"><Link to="/login">Iniciar sesión</Link></Button>}
+        {!logged && <Button marginLeft="3vw" width="64px" height="64px" backgroundColor="transparent"><Link to="/registro">Registrarse</Link></Button>}
         {logged &&
         <Menu.Root>
             <Menu.Trigger asChild>
@@ -94,7 +95,7 @@ function Nav() {
                 <Menu.Positioner>
                 <Menu.Content>
                     <Menu.Item><Link to="/favoritos">Favoritos</Link></Menu.Item>
-                    <Menu.Item onClick={() => {localStorage.setItem("token", ""); setLogged(false); localStorage.setItem("user", "")}}>Cerrar Sesión</Menu.Item>
+                    <Menu.Item onClick={() => {localStorage.setItem("token", ""); setLogged(false); localStorage.setItem("user", ""); navigate("/")}}>Cerrar Sesión</Menu.Item>
                 </Menu.Content>
                 </Menu.Positioner>
             </Portal>

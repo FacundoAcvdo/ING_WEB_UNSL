@@ -12,6 +12,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/jackc/pgx/v5"
+	"github.com/joho/godotenv"
 )
 
 var jwtKey []byte
@@ -43,10 +44,10 @@ func JWTValidate(next http.Handler) http.Handler {
 
 		if r.Method == http.MethodOptions {
 			w.WriteHeader(http.StatusOK)
+			return
 		}
 
 		header := r.Header.Get("Authorization")
-
 		if header == "" {
 			http.Error(w, "No hay token", http.StatusUnauthorized)
 			return
@@ -183,9 +184,6 @@ func handleFavoritos(w http.ResponseWriter, r *http.Request) {
 		lista[i] = id[0]
 		i = i + 1
 	}
-
-	fmt.Println(lista)
-
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(lista)
 }
@@ -213,6 +211,7 @@ func handleRemove(w http.ResponseWriter, r *http.Request) {
 		log.Fatalf("No se pudo remover de la base de datos: %\n", e)
 	}
 }
+
 func handleCheckFav(w http.ResponseWriter, r *http.Request) {
 	enableCORS(w)
 	var data UserMovie
@@ -234,15 +233,60 @@ func handleCheckFav(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(map[string]bool{"favorito": res.Next()})
 }
 
+func handleRegister(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
+
+	if r.Method == "OPTIONS" {
+		return
+	}
+
+	if r.Method != "POST" {
+		http.Error(w, "Método no permitido", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var creds Credentials
+	err := json.NewDecoder(r.Body).Decode(&creds)
+	if err != nil {
+		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		return
+	}
+
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
+	if err != nil {
+		log.Fatalf("No se pudo conectar a la base de datos: %v\n", err)
+	}
+	defer conn.Close(context.Background())
+
+	_, err = conn.Exec(
+		context.Background(),
+		"INSERT INTO USUARIO (nombreUsuario, Password) VALUES ($1, $2)",
+		creds.Username,
+		creds.Password,
+	)
+
+	if err != nil {
+		http.Error(w, "Error al registrar usuario", http.StatusInternalServerError)
+		return
+	}
+
+	w.WriteHeader(http.StatusCreated)
+}
+
 func main() {
+	err := godotenv.Load()
+
+	if err != nil {
+		return
+	}
 	jwtKey = []byte(os.Getenv("JWT_KEY"))
 
 	http.HandleFunc("/login", handleLogin)
 	http.HandleFunc("/add", handleAdd)
 	http.HandleFunc("/favoritos", handleFavoritos)
 	http.HandleFunc("/remove", handleRemove)
+	http.HandleFunc("/registro", handleRegister)
 	http.HandleFunc("/checkfav", handleCheckFav)
-	http.Handle("/validate", JWTValidate(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-	})))
+	http.Handle("/validate", JWTValidate(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {})))
 	http.ListenAndServe(":8080", nil)
 }
