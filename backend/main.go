@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -187,6 +188,50 @@ func handleFavoritos(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 	json.NewEncoder(w).Encode(lista)
+}
+
+func handleRemove(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
+	var creds UserMovie
+	err := json.NewDecoder(r.Body).Decode(&creds)
+	if err != nil {
+		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		return
+	}
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
+	if err != nil {
+		log.Fatalf("No se pudo conectar a la base de datos: %v\n", err)
+	}
+	defer conn.Close(context.Background())
+	_, e := conn.Exec(
+		context.Background(),
+		"DELETE FROM FAVORITOS WHERE nombreusuario = $1 AND idpelicula = $2",
+		creds.Username,
+		creds.Id,
+	)
+	if e != nil {
+		log.Fatalf("No se pudo remover de la base de datos: %\n", e)
+	}
+}
+func handleCheckFav(w http.ResponseWriter, r *http.Request) {
+	enableCORS(w)
+	var data UserMovie
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, "Datos inválidos", http.StatusBadRequest)
+		return
+	}
+	conn, err := pgx.Connect(context.Background(), os.Getenv("DB_URL"))
+	if err != nil {
+		log.Fatalf("No se pudo conectar a la base de datos: %v\n", err)
+	}
+	defer conn.Close(context.Background())
+	res, e := conn.Query(context.Background(), "SELECT * FROM FAVORITOS where nombreusuario='"+data.Username+"' AND idpelicula='"+strconv.Itoa(data.Id)+"'")
+	if e != nil {
+		log.Fatalf("Error en la consulta: %v\n", e)
+	}
+	w.Header().Set("Content-Type", "application/json")
+	json.NewEncoder(w).Encode(map[string]bool{"favorito": res.Next()})
 }
 
 func main() {
