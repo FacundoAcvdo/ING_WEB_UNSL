@@ -254,7 +254,6 @@ func main() {
 	http.HandleFunc("/remove", handleRemove)
 	http.HandleFunc("/checkfav", handleCheckFav)
 	http.Handle("/validate", JWTValidate(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
 	})))
 	http.ListenAndServe(":8080", nil)
 }
