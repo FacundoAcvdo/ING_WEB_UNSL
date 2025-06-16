@@ -76,7 +76,7 @@ function Detalle() {
       }
     }).then((res) => {
       if(!res.ok){
-          alert("Error al añadir a favoritos")
+          alert("Error al autenticar (vuelva a iniciar sesión)")
           return
       }
 

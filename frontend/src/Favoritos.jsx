@@ -12,9 +12,10 @@ const url_favoritos = import.meta.env.VITE_FAVORITOS_URL;
 function Favoritos() {
   let arr = [1, 2, 3, 4, 5]
   let {data} = useParams()
+  const [load, setLoad] = useState(true)
+  const [mensaje, setMensaje] = useState(false)
   const [peliculas, setPeliculas] = useState([])
   const [result, setResult] = useState({})
-  const [load, setLoad] = useState(true)
 
   const options = {
   method: 'GET',
@@ -25,13 +26,16 @@ function Favoritos() {
   };
 
   useEffect(()=>{
-
       fetch(url_favoritos, {
             method:"POST",
             body: JSON.stringify({userName : localStorage.getItem("user")})
         }).then((res) => res.json())
         .then((res) => {
             setResult(JSON.parse(JSON.stringify(res)))
+            if (Object.values(JSON.parse(JSON.stringify(res))).length == 0) {
+                setLoad(false)
+                setMensaje(true)
+            }
         })
   }, [])
 
@@ -46,11 +50,9 @@ function Favoritos() {
             setPeliculas(peliculas => [...peliculas, res])
             setLoad(false)
         })
-        .catch(err => console.error(err));
+        .catch(err => console.error(err))
     }
   }, [result])
-
-
 
   return (
     <>
@@ -58,6 +60,7 @@ function Favoritos() {
 
         <Center w="100%" h="100%" marginTop="40px" display="flex" flexDirection="column" justifyContent="flex-start">
         <Text textStyle="3xl" fontWeight="semibold" textAlign="left" width="56.875%" marginBottom="10px">Favoritos</Text>
+        {mensaje && <Text textStyle="xl" fontWeight="light" textAlign="left" width="56.875%" marginTop="2vh">No hay favoritos...</Text>}
             <div className='contenedorBusqueda'>
                 <div className='menu'>
 
