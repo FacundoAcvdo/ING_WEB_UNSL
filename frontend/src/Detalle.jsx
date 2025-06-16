@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import { Image, Center, Flex, Text, AbsoluteCenter, ProgressCircle, Button, Card  } from "@chakra-ui/react"
 import { FaBookmark, FaList, FaHeart  } from "react-icons/fa";
+import { IoHeartDislike } from "react-icons/io5";
 
 import Nav from "./Nav.jsx"
 import "./style/Info.css"
@@ -9,6 +10,8 @@ import "./style/Info.css"
 const key = import.meta.env.VITE_AUTH_KEY
 const url_validate = import.meta.env.VITE_VALIDATE_URL;
 const url_add = import.meta.env.VITE_ADD_URL;
+const url_checkfav = import.meta.env.VITE_CHECKFAV_URL
+const url_remove = import.meta.env.VITE_REMOVE_URL
 
 function Detalle() {
   let {type ,data} = useParams()
@@ -17,9 +20,8 @@ function Detalle() {
   const [rate, setRate] = useState(0)
   const [director, setDirector] = useState([])
   const [actores, setActores] = useState([])
-  const [canal, setCanal] = useState("")
-  const [colorFav, setColorFav] = useState("white")
-  
+  const [canal, setCanal] = useState("") 
+  const [faveada, setFaveada] = useState(undefined) 
 
   const options = {
         method: 'GET',
@@ -32,6 +34,7 @@ function Detalle() {
   useEffect(()=>{
       setDirector([])
       setActores([])
+      checkFav()
       
       fetch('https://api.themoviedb.org/3/'+type+'/'+data+'?language=es-ES', options)
           .then(res => res.json())
@@ -58,7 +61,7 @@ function Detalle() {
             })
         })
         .catch(err => console.error(err));
-  }, [data])
+  }, [data, faveada])
 
   const handleFav = () => {
     let bodyRequest = {
@@ -91,6 +94,82 @@ function Detalle() {
             if(!res.ok){
               alert("Error desconocido")
             }
+          }).then(() => {
+            setFaveada(true);
+          })
+      }
+    })
+  }
+
+  const checkFav = () => {
+    let bodyRequest = {
+      username: localStorage.getItem("user"),
+      movieId: parseInt(data)
+    }
+
+    fetch(url_validate, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    }).then((res) => {
+      if(!res.ok){
+          alert("Error al consultar")
+          return
+      }
+     
+      if (res.ok) {
+          fetch(url_checkfav, {
+            method:"POST",
+            body: JSON.stringify(bodyRequest)
+          })
+          .then((res) => {
+            if (!res.ok) {
+              alert("Error desconocido")
+              return;
+            }
+            return res.json()
+          })
+          .then((data) => {
+            if (data) {
+              setFaveada(data.favorito)
+            }
+          })
+          .catch((err) => {
+            console.error("Error al consultar favoritos", err);
+          });
+      }
+    })
+  }
+
+  const handleRemove = () => {
+    let bodyRequest = {
+      username: localStorage.getItem("user"),
+      movieId: parseInt(data)
+    }
+
+    fetch(url_validate, {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      }
+    }).then((res) => {
+      if(!res.ok){
+          alert("Error al quitar de la lista")
+          return
+      }
+     
+      if (res.ok) {
+          fetch(url_remove, {
+            method:"POST",
+            body: JSON.stringify(bodyRequest)
+          })
+          .then((res) => {
+            if(!res.ok){
+              alert("Error desconocido")
+            }
+          }).then(() => {
+            setFaveada(false);
           })
       }
     })
@@ -190,7 +269,8 @@ function Detalle() {
                   </Center>
                   <Flex flexDirection="row" gap="1vw">
                     <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444"><FaList /></Button>
-                    <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444" onClick={()=>handleFav()} color={colorFav}><FaHeart /></Button>
+                    {faveada && <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444" onClick={()=>handleRemove()}><IoHeartDislike /></Button>}
+                    {!faveada && <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444" onClick={()=>handleFav()}><FaHeart /></Button>}
                     <Button width="2.5vw" height="2.5vw" borderRadius="50%" backgroundColor="#082444"><FaBookmark /></Button>
                   </Flex>
                   <Text textStyle="md" color="gray.200" fontStyle="italic" fontWeight="normal" marginTop="1vh">{result.tagline || ""}</Text>

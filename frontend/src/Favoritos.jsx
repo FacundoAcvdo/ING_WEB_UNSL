@@ -39,8 +39,6 @@ function Favoritos() {
     setPeliculas([])
     let values = Object.values(result)
 
-    console.log(values)
-
     for (let index = 0; index < values.length; index++) {
         fetch('https://api.themoviedb.org/3/movie/'+values[index]+'?language=es-ES', options)
         .then(res => res.json())
@@ -68,7 +66,7 @@ function Favoritos() {
                     <Flex gap="7" flexDirection="column" marginTop="1vh">
                     {load && arr.map((_, index)=> {
                         return (
-                        <HStack gap="5">
+                        <HStack gap="5" key={index}>
                             <SkeletonCircle size="20" />
                             <Stack flex="1">
                             <Skeleton height="10" />
