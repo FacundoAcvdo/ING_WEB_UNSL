@@ -35,7 +35,7 @@ function Detalle() {
       setDirector([])
       setActores([])
       checkFav()
-      
+
       fetch('https://api.themoviedb.org/3/'+type+'/'+data+'?language=es-ES', options)
           .then(res => res.json())
           .then(res => {
@@ -114,7 +114,6 @@ function Detalle() {
       }
     }).then((res) => {
       if(!res.ok){
-          alert("Error al consultar")
           return
       }
      

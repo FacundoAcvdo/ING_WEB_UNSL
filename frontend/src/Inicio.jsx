@@ -3,13 +3,9 @@ import theMovieDb from '../lib/themoviedb'
 import CardPelicula from './CardPelicula'
 import "./style/Inicio.css"
 import { Center, Text } from '@chakra-ui/react'
-import { useParams } from "react-router";
 
 function Inicio() {
   const [populares, setPopulares] = useState([])
-  let { data } = useParams() 
-  console.log(data)
-
 
   useEffect(()=>{
     theMovieDb.movies.getPopular({},
