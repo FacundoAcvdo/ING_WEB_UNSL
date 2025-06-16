@@ -11,7 +11,6 @@ import (
 
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/jackc/pgx/v5"
-	"github.com/joho/godotenv"
 )
 
 var jwtKey []byte
@@ -191,10 +190,6 @@ func handleFavoritos(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		return
-	}
 	jwtKey = []byte(os.Getenv("JWT_KEY"))
 
 	http.HandleFunc("/login", handleLogin)
